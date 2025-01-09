@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -9,12 +10,12 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'admin','auth'], function () {
     Route::get('/recipes', 'App\Http\Controllers\RecipeController@index')->name('recipes.index');
-    Route::get('/recipes/{id}', 'App\Http\Controllers\RecipeController@show')->name('recipes.show');
+    Route::get('/recipe/show/{id}', 'App\Http\Controllers\RecipeController@show')->name('recipes.show');
     Route::get('/recipes/create', 'App\Http\Controllers\RecipeController@create')->name('recipes.create');
     Route::post('/recipes', 'App\Http\Controllers\RecipeController@store')->name('recipes.store');
-    Route::get('/recipes/{id}/edit', 'App\Http\Controllers\RecipeController@edit')->name('recipes.edit');
-    Route::put('/recipes/{id}', 'App\Http\Controllers\RecipeController@update')->name('recipes.update');
-    Route::delete('/recipes/{id}', 'App\Http\Controllers\RecipeController@destroy')->name('recipes.destroy');
+    Route::get('/recipe/{id}/edit', 'App\Http\Controllers\RecipeController@edit')->name('recipes.edit');
+    Route::put('/recipe/{id}', 'App\Http\Controllers\RecipeController@update')->name('recipes.update');
+    Route::delete('/recipe/delete/{id}', 'App\Http\Controllers\RecipeController@destroy')->name('recipes.destroy');
 });
 
 Route::group(['middleware' => 'admin','auth'], function () {
@@ -42,7 +43,7 @@ Route::get('/dashboard', function () {
 })->middleware(['admin','auth', 'verified'])->name('dashboard');
 
 Route::get('/like/{id}', 'App\Http\Controllers\LikeController@like')->name('like');
-Route::get('/recipes/{id}', 'App\Http\Controllers\RecipeController@show')->name('user.recipes.show');
+Route::get('/user/recipes/{id}', [RecipeController::class,'show'])->name('user.recipes.show');
 
 Route::get('/user/dashboard', function () {
     $recipes = App\Models\Recipe::with('category','likes')->get();
